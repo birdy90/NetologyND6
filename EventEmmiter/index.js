@@ -14,7 +14,7 @@ vkChat
   .setMaxListeners(2)
   .on('message', ChatApp.chatOnMessage)
   .on('message', ChatApp.prepareToAnswerOnMessage)
-  .on('close', ChatApp.vkClose);
+  .once('close', ChatApp.vkClose);
 
 
 // Закрыть вконтакте
