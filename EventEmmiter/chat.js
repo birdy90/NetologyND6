@@ -14,6 +14,10 @@ class ChatApp extends EventEmitter {
       this.emit('message', `${this.title}: ping-pong`);
     }, 1000);
   }
+
+  close() {
+      this.emit('close');
+  }
 }
 
 let webinarChat = new ChatApp('webinar');
@@ -28,10 +32,13 @@ let prepareToAnswerOnMessage = () => {
   console.log('Готовлюсь к ответу');
 };
 
+let vkClose = () => { console.log('Чат вконтакте закрылся :(') };
+
 webinarChat.on('message', chatOnMessage)
   .on('message', prepareToAnswerOnMessage);
 facebookChat.on('message', chatOnMessage);
 vkChat.setMaxListeners(2)
+  .on('close', vkClose)
   .on('message', chatOnMessage)
   .on('message', prepareToAnswerOnMessage);
 
@@ -39,6 +46,7 @@ vkChat.setMaxListeners(2)
 // Закрыть вконтакте
 setTimeout(()=> {
   console.log('Закрываю вконтакте...');
+  vkChat.close();
   vkChat.removeListener('message', chatOnMessage);
 }, 10000);
 
