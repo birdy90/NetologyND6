@@ -10,23 +10,27 @@ let read = file => {
       if (error)
         fail(error);
       else
-        done(content);
+        done({
+          name: file,
+          content: content
+        });
     });
   });
 };
 
-let write = (file, data) => {
+let readAll = (path) => {
   return new Promise((done, fail) => {
-    fs.writeFile(file, data, options, error => {
+    fs.readdir(path, {}, (error, files) => {
       if (error)
         fail(error);
       else
-        done();
+        done(readFilesContents(files.map(file => `${path}/${file}`)));
     });
   });
 };
 
-module.exports = {
-  read: read,
-  write: write
+let readFilesContents = (files) => {
+  return Promise.all(files.map(item => read(item)));
 };
+
+module.exports = readAll;
