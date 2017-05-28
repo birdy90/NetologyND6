@@ -24,13 +24,9 @@ let readAll = (path) => {
       if (error)
         fail(error);
       else
-        done(readFilesContents(files.map(file => `${path}/${file}`)));
+        done(Promise.all(files.map(file => read(`${path}/${file}`))));
     });
   });
-};
-
-let readFilesContents = (files) => {
-  return Promise.all(files.map(item => read(item)));
 };
 
 module.exports = readAll;
