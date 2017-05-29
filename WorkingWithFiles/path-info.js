@@ -1,39 +1,52 @@
 const fs = require('fs');
 
-const options = {
+let options = {
   encoding: 'utf8'
 };
 
 let showInfo = (path, callback) => {
-  let info = { path: path };
   fs.stat(path, (error, data) => {
     if (error)
       callback(error, null);
     else {
       if (data.isFile()) {
-        info.type = 'file';
-        fs.readFile(path, options, (error, data) => {
-          if (error)
-            callback(error, null);
-          else {
-            info.content = data;
-            callback(null, info);
-          }
-        });
+        readFile(path, callback);
       }
       if (data.isDirectory()) {
-        info.type = 'directory';
-        fs.readdir(path, options, (error, files) => {
-          if (error)
-            callback(error, null);
-          else {
-            info.childs = files;
-            callback(null, info);
-          }
-        });
+        readDir(path, callback);
       }
     }
   });
 };
+
+function readFile(path, callback) {
+  fs.readFile(path, options, (error, data) => {
+    if (error)
+      callback(error, null);
+    else {
+      let info = {
+        path: path,
+        type: 'file',
+        content: data
+      };
+      callback(null, info);
+    }
+  });
+}
+
+function readDir(path, callback) {
+  fs.readdir(path, options, (error, files) => {
+    if (error)
+      callback(error, null);
+    else {
+      let info = {
+        path: path,
+        type: 'directory',
+        childs: files
+      };
+      callback(null, info);
+    }
+  });
+}
 
 module.exports = showInfo;
