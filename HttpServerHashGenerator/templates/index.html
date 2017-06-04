@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Получить хэш по имени</title>
+
+    <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+
+    <div class="wide-container">
+        <h1>Генерируем хэш по имени</h1>
+    </div>
+
+    <div class="container">
+        <div class="error-popup"></div>
+
+        <form class="send-form" method="post" action="/hashname" onsubmit="return formSubmitter(this)">
+
+            <label for="firstname">Имя</label>
+            <input id="firstname" type="text" name="firstname" />
+            <label for="lastname">Фамилия</label>
+            <input id="lastname" type="text" name="lastname" />
+
+            <div class="centerer">
+                <input type="submit" />
+            </div>
+        </form>
+    </div>
+
+    <script src="/static/scripts.js"></script>
+</body>
+</html>
