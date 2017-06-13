@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
     .then((page) => res.send(page));
 });
 app.get('/users', (req, res) => {
-  utils.readData()
+  utils.readData(req.query.limit, req.query.offset, req.query.fields)
     .then((data) => res.json(data.users));
 });
 app.post('/users', (req, res) => {
@@ -29,6 +29,11 @@ app.put('/users/:id', (req, res) => {
   utils.readData()
     .then((data) => utils.updateData(data, req.params.id, req.body.name, req.body.score))
     .then((data) => utils.writeData(data))
+    .then((data) => res.json({status: 'ok'}));
+});
+app.delete('/users', (req, res) => {
+  utils.readData()
+    .then((data) => utils.clearData())
     .then((data) => res.json({status: 'ok'}));
 });
 app.delete('/users/:id', (req, res) => {

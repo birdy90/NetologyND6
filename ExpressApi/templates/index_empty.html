@@ -8,34 +8,35 @@
     <title>Работа с пользователями</title>
 </head>
 <body>
-<h1>Список пользователей</h1>
-<p>Пользователей нет</p>
-<h1>Добавить нового пользователя</h1>
-<form class="add-form">
-    <input type="text" name="name" placeholder="введите имя" />
-    <input type="submit" value="Сохранить" />
-</form>
+    <h1>Список пользователей</h1>
+    <p>Пользователей нет</p>
+    <h1>Добавить нового пользователя</h1>
+    <form class="add-form">
+        <input type="text" name="name" placeholder="введите имя" />
+        <input type="text" name="score" placeholder="введите очки" />
+        <input type="submit" value="Сохранить" />
+    </form>
 
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-<script>
-  $(function() {
-    $('.add-form').on('submit', (e) => {
-      e.preventDefault();
-      $.ajax({
-        method: 'post',
-        url: '/users/',
-        data: $(e.target).serialize(),
-        dataType: 'json'
-      }).done((data) => {
-        if (data.status === 'ok') {
-          window.location.href = window.location.href;
-        } else {
-          alert('Ошибка при создании пользователя');
-        }
-      })
-    });
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+      $(function() {
+        $('.add-form').on('submit', (e) => {
+          e.preventDefault();
+          $.ajax({
+            method: 'post',
+            url: '/users/',
+            data: $(e.target).serialize(),
+            dataType: 'json'
+          }).done((data) => {
+            if (data.status === 'ok') {
+              window.location.href = window.location.href;
+            } else {
+              alert('Ошибка при создании пользователя');
+            }
+          })
+        });
 
-  });
-</script>
+      });
+    </script>
 </body>
 </html>

@@ -25,6 +25,7 @@
             </li>
         {{@}}
     </ul>
+    <button class="clear-button">Удалить все пользователей</button>
     <h1>Добавить нового пользователя</h1>
     <form class="add-form">
         <input type="text" name="name" placeholder="введите имя" />
@@ -70,7 +71,7 @@
             e.preventDefault();
             $.ajax({
                 method: 'post',
-                url: '/users/',
+                url: '/users',
                 data: $(e.target).serialize(),
                 dataType: 'json'
             }).done((data) => {
@@ -79,6 +80,16 @@
               } else {
                 error('Ошибка при создании пользователя', data.status);
               }
+            })
+          });
+
+          $('.clear-button').on('click', () => {
+            if (!confirm("Удалить всё?")) return;
+            $.ajax({
+                method: 'delete',
+                url: '/users'
+            }).done(() => {
+                window.location.href = window.location.href;
             })
           });
 

@@ -27,10 +27,36 @@ const read = (path) => {
   });
 };
 
-const readData = () => {
+const readData = (limit, offset, fields) => {
   return ensureDataFileExist(dataFile)
     .then(() => read(dataFile))
+    .then((data) => decode(data))
+    .then((data) => truncateData(data, limit, offset, fields))
     .then((data) => decode(data));
+};
+
+const truncateData = (data, limit, offset, fields) => {
+  console.log(data);
+  return new Promise((done, fail) => {
+    if (!offset || offset >= data.users.length || offset < 0) offset = 0;
+    if (!limit || offset + limit > data.users.length) limit = data.users.length - offset;
+    if (limit < 0) limit = 0;
+    if (!fields) fields = 'id,name,score';
+    fields = fields.split(',');
+    const users = [];
+    for (let i = offset; i < offset + limit; i++)
+      users.push(data.users[i]);
+    data.users = users.map((item) => {
+      const res = {};
+      for (let key in fields) {
+        if (fields.hasOwnProperty(key)) {
+          res[key] = data.users[key];
+        }
+      }
+      return res;
+    });
+    done(data);
+  });
 };
 
 const readTemplate = (path, ctx) => {
@@ -77,6 +103,13 @@ const removeData = (data, id) => {
   })
 };
 
+const clearData = (data, id) => {
+  return new Promise((done, fail) => {
+    fs.writeFile(dataFile, JSON.stringify(initialData), done);
+    done(data);
+  })
+};
+
 const ensureDataFileExist = (path) => {
   return new Promise((done, fail) => {
     fs.exists(path, (result) => {
@@ -115,11 +148,13 @@ const handleContext = (template, ctx) => {
 
 module.exports = {
   readData,
+  truncateData,
   readTemplate,
   writeData,
   appendData,
   updateData,
   removeData,
+  clearData,
   encode,
   decode
 };
