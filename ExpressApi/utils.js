@@ -31,30 +31,34 @@ const readData = (limit, offset, fields) => {
   return ensureDataFileExist(dataFile)
     .then(() => read(dataFile))
     .then((data) => decode(data))
-    .then((data) => truncateData(data, limit, offset, fields))
-    .then((data) => decode(data));
+    .then((data) => truncateData(data, limit, offset, fields));
 };
 
 const truncateData = (data, limit, offset, fields) => {
-  console.log(data);
   return new Promise((done, fail) => {
-    if (!offset || offset >= data.users.length || offset < 0) offset = 0;
-    if (!limit || offset + limit > data.users.length) limit = data.users.length - offset;
-    if (limit < 0) limit = 0;
+    if (!offset) offset = 0;
+    offset = Math.min(offset, data.users.length);
+    offset = Math.max(offset, 0);
+
+    if (!limit) limit = data.users.length - offset;
+    limit = Math.min(limit, data.users.length - offset);
+    limit = Math.max(limit, 0);
+
     if (!fields) fields = 'id,name,score';
     fields = fields.split(',');
+
     const users = [];
     for (let i = offset; i < offset + limit; i++)
       users.push(data.users[i]);
+
     data.users = users.map((item) => {
       const res = {};
-      for (let key in fields) {
-        if (fields.hasOwnProperty(key)) {
-          res[key] = data.users[key];
-        }
-      }
+      fields.forEach((key) => {
+        res[key] = item[key];
+      });
       return res;
     });
+
     done(data);
   });
 };
