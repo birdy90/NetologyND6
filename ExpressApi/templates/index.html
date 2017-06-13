@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Работа с пользователями</title>
+
+    <style>
+        form { display: inline-block;}
+    </style>
+</head>
+<body>
+    <h1>Список пользователей</h1>
+    <ul>
+        {{@users}}
+            <li data-id="{{id}}">{{id}}. {{name}}
+                <form class="update-form">
+                    <input type="text" name="name" placeholder="новое имя" />
+                    <input type="submit" value="Изменить имя" />
+                </form>
+                <button class="delete-button">Удалить</button>
+            </li>
+        {{@}}
+    </ul>
+    <h1>Добавить нового пользователя</h1>
+    <form class="add-form">
+        <input type="text" name="name" placeholder="введите имя" />
+        <input type="submit" value="Сохранить" />
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        $(function() {
+
+          $('.delete-button').on('click', (e) => {
+            $.ajax({
+                method: 'delete',
+                url: '/users/' + $(e.target).parents('li').data('id'),
+                dataType: 'json'
+            }).done((data) => {
+              if (data.status === 'ok') {
+                window.location.href = window.location.href;
+              } else {
+                error('Ошибка при удалении пользователя с идентификатором ' + $(e.target).parents('li').data('id'), data.status);
+              }
+            })
+          });
+
+          $('.update-form').on('submit', (e) => {
+            e.preventDefault();
+            $.ajax({
+                method: 'put',
+                url: '/users/' + $(e.target).parents('li').data('id'),
+                data: $(e.target).serialize(),
+                dataType: 'json'
+            }).done((data) => {
+              if (data.status === 'ok') {
+                window.location.href = window.location.href;
+              } else {
+                error('Ошибка при изменении имени пользователя ' + $(e.target).parents('li').data('id'), data.status);
+              }
+            })
+          });
+
+          $('.add-form').on('submit', (e) => {
+            e.preventDefault();
+            $.ajax({
+                method: 'post',
+                url: '/users/',
+                data: $(e.target).serialize(),
+                dataType: 'json'
+            }).done((data) => {
+              if (data.status === 'ok') {
+                window.location.href = window.location.href;
+              } else {
+                error('Ошибка при создании пользователя', data.status);
+              }
+            })
+          });
+
+          const error = (text, err) => {
+            alert(text);
+            console.log(err)
+          };
+        });
+    </script>
+</body>
+</html>

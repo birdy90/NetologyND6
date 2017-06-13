@@ -1,7 +1,7 @@
 const views = require('./views');
 const fs = require('fs');
 
-let urls = {
+const urls = {
     '/': views.index,
     '/hashname': views.hashname,
 
@@ -13,7 +13,7 @@ const handler = (req, res) => {
     if (urls[req.url]) {
         urls[req.url](req, res);
     } else {
-        let staticRegExp = new RegExp('^\/static\/.*', 'gi');
+        const staticRegExp = new RegExp('^\/static\/.*', 'gi');
         if (staticRegExp.test(req.url)) {
             fs.exists(`.${req.url}`, (exists) => {
                 if (!exists) {

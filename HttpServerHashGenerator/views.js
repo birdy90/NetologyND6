@@ -27,7 +27,6 @@ const hashname = (req, res, ctx) => {
         let requestDone = (newRes) => {
             newRes.on('data', chunk => newData += chunk);
             newRes.on('end', () => {
-                decodeURIComponent
                 newData = JSON.parse(newData);
                 ctx.hash = newData.hash;
                 let handler = (newData) => {
