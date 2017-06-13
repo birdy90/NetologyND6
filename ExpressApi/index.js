@@ -13,8 +13,7 @@ app.get('/', (req, res) => {
 
 app.get('/users', (req, res) => {
   utils.readData()
-    .then((data) => utils.encode(data.users))
-    .then((data) => res.json(data));
+    .then((data) => res.json(data.users));
 });
 
 app.post('/users', (req, res) => {
@@ -27,8 +26,7 @@ app.post('/users', (req, res) => {
 
 app.get('/users/:id', (req, res) => {
   utils.readData()
-    .then((data) => utils.encode(data.users.find(item => item.id === parseInt(req.params.id))))
-    .then((data) => res.json(data));
+    .then((data) => res.json(data.users.find(item => item.id === parseInt(req.params.id))));
 });
 
 app.put('/users/:id', (req, res) => {
@@ -45,9 +43,42 @@ app.delete('/users/:id', (req, res) => {
     .then((data) => res.json({status: 'ok'}));
 });
 
+const RPC = {
+  'list': (req, res) => {
+    utils.readData()
+      .then((data) => res.json(data.users));
+    },
+  'get': (req, res) => {
+    utils.readData()
+      .then((data) => res.json(data.users.find(item => item.id === parseInt(req.body.id))));
+    },
+  'add': (req, res) => {
+    utils.readData()
+      .then((data) => utils.appendData(data, req.body))
+      .then((data) => utils.writeData(data))
+      .then((data) => res.json({status: 'ok'}));
+    },
+  'update': (req, res) => {
+    utils.readData()
+      .then((data) => utils.updateData(data, req.body.id, req.body.name))
+      .then((data) => utils.writeData(data))
+      .then((data) => res.json({status: 'ok'}));
+    },
+  'delete': (req, res) => {
+    utils.readData()
+      .then((data) => utils.removeData(data, req.body.id))
+      .then((data) => utils.writeData(data))
+      .then((data) => res.json({status: 'ok'}));
+    },
+};
+
+app.post('/rpc', (req, res) => {
+  RPC[req.body.method](req, res);
+});
+
 app.use(function(err, req, res, next) {
   console.log(err);
-  res.status(200).json({status: req});
+  res.status(500).json({status: err.stack});
 });
 
 const getTemplateName = (data) => data.users.length ? './templates/index.html' : './templates/index_empty.html';
