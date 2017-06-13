@@ -60,10 +60,11 @@ const appendData = (data, newData) => {
   })
 };
 
-const updateData = (data, id, name) => {
+const updateData = (data, id, name, score) => {
   return new Promise((done, fail) => {
     const item = data.users.find(item => item.id == id)
     data.users[data.users.indexOf(item)].name = name;
+    data.users[data.users.indexOf(item)].score = score;
     done(data);
   })
 };

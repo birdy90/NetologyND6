@@ -15,10 +15,11 @@
     <h1>Список пользователей</h1>
     <ul>
         {{@users}}
-            <li data-id="{{id}}">{{id}}. {{name}}
+            <li data-id="{{id}}">{{id}}. <!--{{name}}. Счёт: {{score}}-->
                 <form class="update-form">
-                    <input type="text" name="name" placeholder="новое имя" />
-                    <input type="submit" value="Изменить имя" />
+                    <input type="text" name="name" placeholder="новое имя" value="{{name}}" />
+                    <input type="text" name="score" placeholder="очки" value="{{score}}" />
+                    <input type="submit" value="Изменить" />
                 </form>
                 <button class="delete-button">Удалить</button>
             </li>
@@ -27,6 +28,7 @@
     <h1>Добавить нового пользователя</h1>
     <form class="add-form">
         <input type="text" name="name" placeholder="введите имя" />
+        <input type="text" name="score" placeholder="введите очки" />
         <input type="submit" value="Сохранить" />
     </form>
 

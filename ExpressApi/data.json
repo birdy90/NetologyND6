@@ -1,1 +1,1 @@
-{"lastIndex":50,"users":[{"id":37,"name":"Вася"},{"name":"Петя","id":38},{"name":"Дима","id":40},{"name":"Анатолий","id":41},{"name":"Жора","id":42},{"id":45,"name":"Егор"},{"method":"add","name":"Немо","id":49}]}
+{"lastIndex":52,"users":[{"id":37,"name":"Вася","score":"1"},{"name":"Петя","id":38,"score":0},{"name":"Дима","id":40,"score":"3"},{"name":"Анатолий","id":41,"score":10},{"name":"Жора","id":42,"score":"2"},{"id":45,"name":"Егор","score":0},{"method":"add","name":"Немо","id":49,"score":0},{"name":"Илья","id":51,"score":"123"}]}

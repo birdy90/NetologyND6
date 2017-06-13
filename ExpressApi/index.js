@@ -7,15 +7,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
   utils.readData()
-    .then((data) => utils.readTemplate(getTemplateName(data), data))
+    .then((data) => utils.readTemplate(data.users.length ? './templates/index.html' : './templates/index_empty.html', data))
     .then((page) => res.send(page));
 });
-
 app.get('/users', (req, res) => {
   utils.readData()
     .then((data) => res.json(data.users));
 });
-
 app.post('/users', (req, res) => {
   utils.readData()
     .then((data) => utils.appendData(data, req.body))
@@ -23,19 +21,16 @@ app.post('/users', (req, res) => {
     // .then((data) => utils.encode(data.users[data.users.length - 1])) // для возвращения последнего элемента
     .then((data) => res.json({status: 'ok'}));
 });
-
 app.get('/users/:id', (req, res) => {
   utils.readData()
     .then((data) => res.json(data.users.find(item => item.id === parseInt(req.params.id))));
 });
-
 app.put('/users/:id', (req, res) => {
   utils.readData()
-    .then((data) => utils.updateData(data, req.params.id, req.body.name))
+    .then((data) => utils.updateData(data, req.params.id, req.body.name, req.body.score))
     .then((data) => utils.writeData(data))
     .then((data) => res.json({status: 'ok'}));
 });
-
 app.delete('/users/:id', (req, res) => {
   utils.readData()
     .then((data) => utils.removeData(data, req.params.id))
@@ -60,7 +55,7 @@ const RPC = {
     },
   'update': (req, res) => {
     utils.readData()
-      .then((data) => utils.updateData(data, req.body.id, req.body.name))
+      .then((data) => utils.updateData(data, req.body.id, req.body.name, req.body.score))
       .then((data) => utils.writeData(data))
       .then((data) => res.json({status: 'ok'}));
     },
@@ -71,7 +66,6 @@ const RPC = {
       .then((data) => res.json({status: 'ok'}));
     },
 };
-
 app.post('/rpc', (req, res) => {
   RPC[req.body.method](req, res);
 });
@@ -80,7 +74,5 @@ app.use(function(err, req, res, next) {
   console.log(err);
   res.status(500).json({status: err.stack});
 });
-
-const getTemplateName = (data) => data.users.length ? './templates/index.html' : './templates/index_empty.html';
 
 app.listen(3000);
