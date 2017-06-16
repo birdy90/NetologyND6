@@ -5,9 +5,147 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Chat with Sockets.io</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: arial, sans-serif;
+            font-size: 18px;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .container {
+            width: 600px;
+            height: 100vh;
+            margin: 0 auto;
+        }
+        .chat-wrapper {
+            height: calc(100vh - 100px);
+            overflow-y: scroll;
+        }
+        .chat {
+            display: flex;
+            flex-direction: column;
+            align-content: flex-end;
+
+            width: 100%;
+            bottom: 0;
+        }
+
+        .message {
+            background: #dfdfdf;
+            padding: 10px;
+            margin: 10px;
+            margin-right: 100px;
+        }
+        .message.my {
+            background: #f0f0f0;
+            margin: 10px;
+            margin-left: 100px;
+        }
+        .message.system {
+            padding: 3px;
+            background: none;
+            font-size: 0.9em;
+            color: gray;
+            margin: 0 80px;
+            text-align: center;
+        }
+
+        .input-wrapper {
+            display: inline-flex;
+            bottom: 0;
+            height: 100px;
+            position: absolute;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .input-wrapper.hidden {
+            display: none;
+        }
+
+        .input-wrapper input {
+            padding: 7px;
+        }
+        .input-wrapper textarea {
+            border: 0;
+            font-size: 0.9em;
+            display: inline-block;
+            outline: none;
+            border-left: solid 1px lightgray;
+            border-right: solid 1px lightgray;
+            margin: 15px 5px;
+            height: calc(100% - 30px);
+            max-height: calc(100% - 30px);
+            width: calc(100% - 55px);
+            max-width: calc(100% - 55px);
+            padding: 10px;
+        }
+        .input-wrapper .send-wrapper {
+            display: inline-flex;
+            justify-content: flex-end;
+            align-items: center;
+            height: 100%;
+            width: 55px;
+        }
+        .input-wrapper .send-wrapper .button {
+            display: block;
+            height: 0;
+            width: 0;
+            cursor: pointer;
+            border-left: solid 35px lightgray;
+            border-top: solid 22px transparent;
+            border-bottom: solid 22px transparent;
+            transition: border 0.1s ease-in;
+        }
+        .input-wrapper .send-wrapper .button:active {
+            border-left: solid 35px gray;
+            border-top: solid 22px transparent;
+            border-bottom: solid 22px transparent;
+        }
+    </style>
 </head>
 <body>
-    <div>YAY!!</div>
+    <div class="container">
+        <div class="chat-wrapper"><div class="chat"></div></div>
+        <div class="input-wrapper">
+            <label for="name-input">Введите Ваше имя</label>
+            <input id="name-input" type="text" name="name" placeholder="имя" />
+            <div class="send-wrapper"><div class="button login-button"></div></div>
+        </div>
+        <div class="input-wrapper hidden">
+            <textarea></textarea>
+            <div class="send-wrapper"><div class="button send-button"></div></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const socket = io('localhost:1234');
+            socket.on('system', (data) => insertMessage(data.message, 'system'));
+
+            document.querySelector('.login-button').addEventListener('click', (e) => {
+                console.log('123');
+                socket.emit('login', {name: document.querySelector('#name-input').value});
+            });
+        });
+
+        const scrollChat = () => {
+            const chatCopntainer = document.querySelector(".chat-wrapper");
+            chatCopntainer.scrollTop = chatCopntainer.scrollHeight;
+        };
+
+        const insertMessage = (text, additionalClass) => {
+            const elem = document.createElement('div');
+            elem.className = 'message ' + additionalClass;
+            elem.innerHTML = text;
+            document.querySelector('.chat').appendChild(elem);
+            scrollChat();
+        };
+    </script>
 </body>
 </html>
