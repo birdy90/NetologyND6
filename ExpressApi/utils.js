@@ -1,4 +1,4 @@
-let fs = require('fs');
+const fs = require('fs');
 
 const dataFile = './data.json';
 const dataOptions = {encoding: 'utf8'};
