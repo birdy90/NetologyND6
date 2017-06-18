@@ -35,13 +35,13 @@
         }
 
         .message {
-            background: #dfdfdf;
+            background: #dcf4f8;
             padding: 10px;
             margin: 10px;
             margin-right: 100px;
         }
         .message.my {
-            background: #f0f0f0;
+            background: #dafad7;
             margin: 10px;
             margin-left: 100px;
         }
@@ -52,6 +52,13 @@
             color: gray;
             margin: 0 80px;
             text-align: center;
+        }
+        .message .user {
+            left: -20px;
+            background-color: inherit;
+            padding: 5px 10px;
+            border-radius: 17px;
+            color: #afafaf;
         }
 
         .input-wrapper {
@@ -69,14 +76,14 @@
 
         .input-wrapper input {
             padding: 7px;
+            width: 180px;
         }
         .input-wrapper textarea {
             border: 0;
             font-size: 0.9em;
             display: inline-block;
             outline: none;
-            border-left: solid 1px lightgray;
-            border-right: solid 1px lightgray;
+            border-top: solid 1px lightgray;
             margin: 15px 5px;
             height: calc(100% - 30px);
             max-height: calc(100% - 30px);
@@ -111,12 +118,14 @@
 <body>
     <div class="container">
         <div class="chat-wrapper"><div class="chat"></div></div>
-        <div class="input-wrapper">
-            <label for="name-input">Введите Ваше имя</label>
+        <div class="input-wrapper login-wrapper">
+            <label for="room-input">Комната</label>
+            <input id="room-input" type="text" name="room" placeholder="комната" />
+            <label for="name-input">Ваше имя</label>
             <input id="name-input" type="text" name="name" placeholder="имя" />
             <div class="send-wrapper"><div class="button login-button"></div></div>
         </div>
-        <div class="input-wrapper hidden">
+        <div class="input-wrapper message-wrapper hidden">
             <textarea></textarea>
             <div class="send-wrapper"><div class="button send-button"></div></div>
         </div>
@@ -124,28 +133,80 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const socket = io('localhost:1234');
-            socket.on('system', (data) => insertMessage(data.message, 'system'));
+      let username = '';
+      const socket = io('localhost:1234');
 
-            document.querySelector('.login-button').addEventListener('click', (e) => {
-                console.log('123');
-                socket.emit('login', {name: document.querySelector('#name-input').value});
-            });
+      document.addEventListener('DOMContentLoaded', () => {
+        socket.on('system', (data) => insertMessage('', data.message, 'system'));
+        socket.on('new-message', (data) => insertMessage(data.username, data.message, ''));
+        socket.on('connection', () => {
+          /* при реконнекте мы должны заново залогиниться (потому что идентификатор сменился) */
+          document.querySelector('.login-wrapper').classList.remove('hidden');
+          document.querySelector('.message-wrapper').classList.add('hidden');
         });
+        document.querySelector('#room-input').focus();
 
-        const scrollChat = () => {
-            const chatCopntainer = document.querySelector(".chat-wrapper");
-            chatCopntainer.scrollTop = chatCopntainer.scrollHeight;
-        };
+        document.querySelector('#name-input').addEventListener('keydown', (e) => {
+          switch (e.key) {
+            case 'Enter':
+              e.preventDefault();
+              document.querySelector('.login-button').click();
+              break;
+          }
+        });
+        document.querySelector('.message-wrapper textarea').addEventListener('keydown', (e) => {
+          switch (e.key) {
+            case 'Enter':
+              e.preventDefault();
+              document.querySelector('.send-button').click();
+              break;
+          }
+        });
+        document.querySelector('.login-button').addEventListener('click', (e) => {
+          /* отправляем данные для входа */
+          username = document.querySelector('#name-input').value;
+          socket.emit('login', {
+            room: document.querySelector('#room-input').value,
+            name: username
+          });
+        });
+        document.querySelector('.send-button').addEventListener('click', (e) => {
+          /* отправляем сообщение */
+          const messageText = document.querySelector('.message-wrapper textarea').value;
+          if (messageText === '') return;
+          socket.emit('new-message', {message: messageText});
+          insertMessage('', messageText, 'my');
+          document.querySelector('.message-wrapper textarea').value = '';
+          document.querySelector('.login-wrapper').classList.add('hidden');
+          document.querySelector('.message-wrapper').classList.remove('hidden');
+        });
+        socket.on('logged', () => {
+          /* если залогинились, то меняем окошко ввода */
+          document.querySelector('.login-wrapper').classList.add('hidden');
+          document.querySelector('.message-wrapper').classList.remove('hidden');
+          document.querySelector('.message-wrapper textarea').focus();
+        });
+      });
 
-        const insertMessage = (text, additionalClass) => {
-            const elem = document.createElement('div');
-            elem.className = 'message ' + additionalClass;
-            elem.innerHTML = text;
-            document.querySelector('.chat').appendChild(elem);
-            scrollChat();
-        };
+      const scrollChat = () => {
+        const chatCopntainer = document.querySelector('.chat-wrapper');
+        chatCopntainer.scrollTop = chatCopntainer.scrollHeight;
+      };
+
+      const insertMessage = (username, text, additionalClass) => {
+        const elem = document.createElement('div');
+        /* добавляем имя пользователя, если оно не пустое */
+        if (username !== '') {
+          const userelem = document.createElement('div');
+          userelem.innerHTML += username;
+          userelem.className = 'user';
+          elem.appendChild(userelem);
+        }
+        elem.className = 'message ' + additionalClass;
+        elem.innerHTML += text;
+        document.querySelector('.chat').appendChild(elem);
+        scrollChat();
+      };
     </script>
 </body>
 </html>
