@@ -12,14 +12,13 @@ dbClient.connect(url, (err, db) => {
 
   const names = db.collection('names');
 
-  names.removeMany()
-    .then(() => names.insertMany([
+  names.insertMany([
       {name: 'Григорий'},
       {name: 'Василий'},
       {name: 'Павел'},
       {name: 'Вероника'},
       {name: 'Маргарита'},
-    ]))
+    ])
     .then(() => names.find().toArray())
     .then((data) => printList(data, 'Изначальные данные'))
     .then(() => names.updateMany({name: {$in: ['Павел', 'Вероника', 'Маргарита']}}, {$set: {name: 'Александра'}}))
@@ -27,7 +26,9 @@ dbClient.connect(url, (err, db) => {
     .then((data) => printList(data, 'Изменённые данные'))
     .then(() => names.removeMany({name: 'Александра'}))
     .then(() => names.find().toArray())
-    .then((data) => printList(data, 'Данные после удаления'));
+    .then((data) => printList(data, 'Данные после удаления'))
+    .then(() => names.removeMany()) // очищаю базу чтобы данные не накапливались при перезапусках
+    .then(() => db.close());
 });
 
 const printList = (data, message) => new Promise((done, fail) => {
