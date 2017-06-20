@@ -1,7 +1,7 @@
 const mongo = require('mongodb');
 const dbClient = mongo.MongoClient;
 
-const url = 'mongodb://localhost:27017/test';
+const url = 'mongodb://localhost:27017/bederdinov_mongo_1';
 
 dbClient.connect(url, (err, db) => {
   if (err) {

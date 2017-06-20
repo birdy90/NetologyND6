@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Записная книжка</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+</head>
+<body>
+
+    <h3>Добавить новую запись</h3>
+    <form class="js-add-form">
+        <label>
+            Новая запись
+            <input type="text" name="first_name" placeholder="Имя" />
+        </label>
+        <input type="text" name="last_name" placeholder="Фамилия" />
+        <input type="text" name="phone" placeholder="Телефон" />
+        <input type="submit" value="Добавить" />
+    </form>
+
+    <h3>Поиск</h3>
+    <form class="js-search-form">
+        <label>
+            Что искать?
+            <input type="text" name="search" placeholder="запрос" value="{{search}}" />
+        </label>
+        <input type="submit" value="Искать" />
+    </form>
+
+    <h1>Записная книжка</h1>
+    <div class="list">
+        {{@users}}
+            <div class="item" data-id="{{_id}}">
+                <span class="main-data">
+                    <a href="/user/{{_id}}">
+                        <span class="value first_name"><b>{{first_name}}</b></span>
+                        <span class="value last_name"><b>{{last_name}}</b></span>
+                    </a>
+                    &nbsp;
+                    <span class="value phone">{{phone}}</span>
+                </span>
+                <span class="button js-delete-form"><small>удалить</small></span>
+                <span class="button js-update-button"><small>редактировать</small></span>
+            </div>
+        {{!}}
+            Записная книжка пуста
+        {{@}}
+    </div>
+
+    <div class="templates hidden">
+        <div class="editor">
+            <form class="js-edit-form">
+                <label>Изменение полей
+                    <input type="text" name="first_name" placeholder="Имя" />
+                </label>
+                <input type="text" name="last_name" placeholder="Фамилия" />
+                <input type="text" name="phone" placeholder="Телефон" />
+                <input type="submit" value="Обновить" />
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="/static/script.js"></script>
+</body>
+</html>

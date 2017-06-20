@@ -1,0 +1,27 @@
+.hidden { display: none; }
+
+.main-data {
+    display: inline-block;
+    width: 300px;
+}
+
+.list {
+    display: inline-block;
+}
+.item {
+    display: block;
+    padding: 5px 15px;
+}
+.item:hover {
+    background: #f0f0f0;
+}
+.item .button {
+    cursor: pointer;
+}
+.item .editor {
+    padding: 10px 0;
+}
+
+input.error {
+    border: solid 1px red;
+}
