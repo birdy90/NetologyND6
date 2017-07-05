@@ -147,12 +147,6 @@ angular.module('myApp.view1', ['ngRoute'])
           }
         };
 
-        $scope.typeCompare = function (input, search_param) {
-          console.log(input, search_param);
-          return true;
-          //return input.type.indexOf(search_param) >= 0;
-        };
-
         $scope.myOrderProperty = 'id';
         $scope.myTypeFilter = '';
 
