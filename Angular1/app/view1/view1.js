@@ -122,23 +122,35 @@ angular.module('myApp.view1', ['ngRoute'])
 
         $scope.pokemonTypes = {
           normal: {
+            alias: "normal",
             name: "Обычный"
           },
           electric: {
+            alias: "electric",
             name: "Электрический"
           },
           water: {
+            alias: "water",
             name: "Водный"
           },
           fire: {
+            alias: "fire",
             name: "Огеннный"
           },
           grass: {
+            alias: "grass",
             name: "Травяной"
           },
           poison: {
+            alias: "poison",
             name: "Ядовитый"
           }
+        };
+
+        $scope.typeCompare = function (input, search_param) {
+          console.log(input, search_param);
+          return true;
+          //return input.type.indexOf(search_param) >= 0;
         };
 
         $scope.myOrderProperty = 'id';

@@ -11,11 +11,11 @@
 </select>
 <select ng-model="myTypeFilter">
     <option value="">без фильтра</option>
-    <option value="{{ type }}" ng-repeat="type in pokemonTypes">{{ type.name }}</option>
+    <option value="{{ type.alias }}" ng-repeat="type in pokemonTypes">{{ type.name }}</option>
 </select>
 
 <ul>
-    <li ng-repeat="pokemon in pokemons | filter: myQuery | filter: myTypeFilter | orderBy: myOrderProperty">
+    <li ng-repeat="pokemon in pokemons | filter: myQuery | filter:{'type':myTypeFilter} | orderBy: myOrderProperty">
         <img src="{{pokemon.ThumbnailImage}}" ng-click="nameClick(pokemon.name)">
 
         <small>ID #{{pokemon.id }}</small>
@@ -27,6 +27,9 @@
 </ul>
 
 <p ng-show="myQuery">
-    Выведены покемоны, содержащие
-    {{myQuery}}
+    Выведены покемоны, содержащие {{myQuery}}
+</p>
+
+<p ng-show="myTypeFilter">
+    Отфильтровали всех по типу: {{ myTypeFilter }}
 </p>
