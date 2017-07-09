@@ -1,0 +1,10 @@
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div class="btn-group" role="group">
+            <a class="btn btn-default"
+               ui-sref-active="active"
+               ng-repeat="(index, item) in $ctrl.items" data-ui-sref="{{item.sref}}" >{{item.title}}</a>
+        </div>
+
+    </div>
+</div>

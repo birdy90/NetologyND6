@@ -1,0 +1,12 @@
+<div class="profile-form">
+    <form name="myForm" ng-model="Profile" ng-submit="formSubmit()">
+        <label>Name: <input class="form-control" type="text" name="name" required ng-model="vm.person.name" /></label>
+        <label>Email: <input class="form-control" type="text" name="email" required ng-model="vm.person.email" /></label>
+        <label>Phone: <input class="form-control" type="text" name="phone" required ng-model="vm.person.phone" /></label>
+
+        <input type="submit" value="Save" />
+    </form>
+
+    <h5>Saved: </h5>
+    <div></div>
+</div>
