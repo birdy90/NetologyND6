@@ -40,7 +40,7 @@ app.delete('/users/:id', (req, res) => {
   utils.readData()
     .then((data) => utils.removeData(data, req.params.id))
     .then((data) => utils.writeData(data))
-    .then((data) => res.json({status: 'ok'}));
+    .then((data) => res.json({status: 'ok', data: data}));
 });
 
 const RPC = {

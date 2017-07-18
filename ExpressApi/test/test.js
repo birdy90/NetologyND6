@@ -53,14 +53,19 @@ describe('user management:', () => {
   });
 
   it('deletion', (done) => {
+    let oldLength;
     server
-      .delete('/users')
-      .expect(200)
+      .get('/users')
       .end((err, response) => {
-        if (err) throw err;
-        expect(response.body.status).to.be.equal('ok');
-        expect(response.body.data.length).eql(0);
-        done();
+        oldLength = response.body.length;
+        server.delete('/users/38')
+          .expect(200)
+          .end((err, response) => {
+            if (err) throw err;
+            expect(response.body.status).to.be.equal('ok');
+            expect(response.body.data.users.length).eql(oldLength - 1);
+            done();
+          });
       });
   });
 });
