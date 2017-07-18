@@ -57,3 +57,4 @@ typings/
 .env
 
 .idea
+data.json.backup
