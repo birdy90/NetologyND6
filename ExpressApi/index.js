@@ -19,7 +19,7 @@ app.post('/users', (req, res) => {
     .then((data) => utils.appendData(data, req.body))
     .then((data) => utils.writeData(data))
     // .then((data) => utils.encode(data.users[data.users.length - 1])) // для возвращения последнего элемента
-    .then((data) => res.json({status: 'ok'}));
+    .then((data) => res.json({status: 'ok', data: data}));
 });
 app.get('/users/:id', (req, res) => {
   utils.readData()
@@ -33,8 +33,8 @@ app.put('/users/:id', (req, res) => {
 });
 app.delete('/users', (req, res) => {
   utils.readData()
-    .then((data) => utils.clearData())
-    .then((data) => res.json({status: 'ok'}));
+    .then((data) => utils.clearData([]))
+    .then((data) => res.json({status: 'ok', data: data}));
 });
 app.delete('/users/:id', (req, res) => {
   utils.readData()
