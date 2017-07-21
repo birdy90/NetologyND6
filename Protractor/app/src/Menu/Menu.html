@@ -1,0 +1,4 @@
+<div class="btn-group" role="group">
+    {{$ctrl}}
+    <a class="btn btn-default" ng-repeat="val in $ctrl.menus" ng-class={active:$ctrl.activeMenu==val.url} href="#!/">Главная</a>
+</div>
