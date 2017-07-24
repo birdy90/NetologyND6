@@ -12,7 +12,7 @@ describe('calculator', () => {
       expect(utils.handleParam('')).equal(0);
     });
     it('checkEmpty smaller', () => {
-      expect(utils.handleParam('-2')).equal(0);
+      expect(utils.handleParam('-2')).equal(-2); // изменено в связи с "появлением" отрицательных чисел
     });
     it('checkEmpty bigger', () => {
       expect(utils.handleParam('5')).equal(2);
@@ -99,6 +99,19 @@ describe('calculator', () => {
     });
     it('check divider correct;', () => {
       expect(calc.add('//<!>\n1!2')).to.be.equal(3);
+    });
+  });
+
+  describe('main 4', () => {
+    it('has negative', () => {
+      expect(() => calc.add('2,-1,3,3'))
+        .to.throw('Отрицательные числа не допустимы.')
+        .with.property('numbers', JSON.stringify([-1]));
+    });
+    it('has many negatives', () => {
+      expect(() => calc.add('-2,-1,3,-3'))
+        .to.throw('Отрицательные числа не допустимы.')
+        .with.property('numbers', JSON.stringify([-2, -1, -3]));
     });
   });
 });

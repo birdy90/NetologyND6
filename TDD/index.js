@@ -11,9 +11,20 @@ class Calculator
       throw new Error('Invalid numbers');
     let sum = 0;
 
+    const negativeNumbers = [];
     const parts = divider.numbers.split(regexp).forEach((item) => {
+      const number = Utils.handleParam(item);
+      if (number < 0) {
+        negativeNumbers.push(number);
+      }
       sum += Utils.handleParam(item);
     });
+
+    if (negativeNumbers.length > 0) {
+      let err = new Error('Отрицательные числа не допустимы.');
+      err.numbers = JSON.stringify(negativeNumbers);
+      throw err;
+    }
 
     return sum;
   }
@@ -27,9 +38,7 @@ class Utils {
         str = '0';
       }
       str = parseInt(str);
-      if (str < 0) {
-        str = 0;
-      } else if (str > 2) {
+      if (str > 2) {
         str = 2;
       }
     }
