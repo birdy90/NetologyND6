@@ -3,11 +3,12 @@ class Calculator
   static add(numbers) {
     numbers = numbers || '';
 
-    const parts = numbers.split(',');
-    parts[0] = Utils.handleParam(parts[0]);
-    parts[1] = Utils.handleParam(parts[1]);
+    let sum = 0;
+    const parts = numbers.split(',').forEach((item) => {
+      sum += Utils.handleParam(item);
+    });
 
-    return parts[0] + parts[1];
+    return sum;
   }
 }
 

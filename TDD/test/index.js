@@ -45,8 +45,11 @@ describe('calculator', () => {
       it('bigger parameters', () => {
         expect(calc.add('3,1')).to.be.eql(3);
       });
-      it('more parameters', () => {
-        expect(calc.add('1,2,1')).to.be.eql(3);
+      it('three parameters', () => {
+        expect(calc.add('1,,4')).to.be.eql(3);
+      });
+      it('five parameters', () => {
+        expect(calc.add('1,2,3,4,')).to.be.eql(7);
       });
     });
   });
