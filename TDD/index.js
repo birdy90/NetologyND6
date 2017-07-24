@@ -38,21 +38,33 @@ class Utils {
         str = '0';
       }
       str = parseInt(str);
-      if (str > 2) {
-        str = 2;
+      if (str > 1000) {
+        str = 0;
       }
     }
     return parseInt(str);
   }
 
   static getDivider(str) {
-    let hasDivider = str.match(/\/\/\<.?\>\n/);
-    let matches = str.match(/(\/\/\<([^\[\]\(\)\|\/\d])\>\n)?(.*)/);
+    let hasDivider = str.match(/\/\/(<.*?\>)+\n/);
     if (hasDivider) {
-      if (!matches || matches.length === 1 || matches[2] === undefined) {
+      const splitedInput = str.split('\n');
+      const numbers = splitedInput[1];
+
+      splitedInput[0] = splitedInput[0].replace(/\//g, '');
+      splitedInput[0] = splitedInput[0].replace(/([\[\]\(\)\|\/\?\*\-\+\^\$])/g, '\\$1');
+      let matches = splitedInput[0].match(/<(.*)>+/);
+
+      if (matches[1] === '' || matches[1].match(/[\d]/) !== null) {
         throw new Error('Invalid custom divider');
       } else {
-        return new Divider(`(?:${matches[2]})`, matches[3]);
+        if (matches[1].match('><')) {
+          matches = matches[1].replace(/></g, '|');
+        } else {
+          matches = matches[1];
+        }
+
+        return new Divider(`(?:${matches})`, numbers);
       }
     } else {
       return undefined;
