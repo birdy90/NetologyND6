@@ -2,9 +2,12 @@ class Calculator
 {
   static add(numbers) {
     numbers = numbers || '';
+    if (numbers.match(/[,\n]{2,}/)) {
+      throw new Error('Invalid dividers');
+    }
 
     let sum = 0;
-    const parts = numbers.split(',').forEach((item) => {
+    const parts = numbers.split(/[,\n]/).forEach((item) => {
       sum += Utils.handleParam(item);
     });
 
